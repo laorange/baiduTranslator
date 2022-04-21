@@ -19,7 +19,9 @@ with open('secret.json', encoding='utf-8') as file:
 # ↓ 自定义设置
 MAX_RETRY_TIMES = 5  # 如果请求错误的重试次数
 # 翻译的任务序列
-SEQUENCE = ['fra', 'spa', 'en', 'jp', 'spa', 'jp', 'fra', 'jp', 'de', 'jp', 'fra', 'jp', 'zh']
+# SEQUENCE = ["en", "fra", "spa", "de", "jp", "pt", "it", "pl", "bul", "est", "zh"]
+# SEQUENCE = ['fra', 'spa', 'en', 'jp', 'spa', 'jp', 'fra', 'jp', 'fra', 'spa', 'fra', 'spa', 'en', 'zh']
+SEQUENCE = ["en", "de", "jp", "spa", "fra", "zh"]
 
 
 class BaiduTranslateItem(BaseModel):
@@ -46,9 +48,11 @@ class Translator:
         self.sleep_time = sleep_time
 
     def translate(self, input_text: str, retry_times=0):
-        time.sleep(self.sleep_time)
-
         input_text = input_text.strip()
+        if not input_text:
+            return ""
+
+        time.sleep(self.sleep_time)
         salt = random.randint(32768, 65536)
         sign = self.make_md5(self.appId + input_text + str(salt) + self.appKey)
 
